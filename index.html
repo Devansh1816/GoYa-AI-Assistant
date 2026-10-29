@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoYa AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            width: 95vw;
+            height: 92vh;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr 340px;
+            grid-template-rows: 60px 1fr;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .telemetry-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 8px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .telemetry-icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .telemetry-label {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .telemetry-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-top: 2px;
+        }
+
+        .launch-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .launch-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .launch-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #fff;
+            transform: translateX(3px);
+        }
+
+        /* Center Panel */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .orb-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .orb {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #a855f7, #6366f1 60%, #1e1b4b);
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .orb:hover {
+            transform: scale(1.05);
+        }
+
+        .orb-icon {
+            font-size: 36px;
+            color: #ffffff;
+        }
+
+        .listening-status {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .listening-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #f59e0b;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        /* Permanent Bottom Input Bar */
+        .input-bar-container {
+            width: 100%;
+            max-width: 580px;
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            margin-top: auto;
+        }
+
+        .cmd-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 14px;
+            padding: 8px 6px;
+        }
+
+        .cmd-input::placeholder {
+            color: #64748b;
+        }
+
+        .run-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .run-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            padding: 20px;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .response-hub {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .response-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .response-card.user {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            align-self: flex-end;
+            color: #e2e8f0;
+        }
+
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #a855f7;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">Y</div>
+            <div class="logo-text">GoYa</div>
+        </div>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>SYSTEM ONLINE (Port 5000)</span>
+        </div>
+    </header>
+
+    <!-- Left Panel: System Status & Launches -->
+    <div class="left-panel">
+        <div class="section-title">System Status</div>
+        <div class="telemetry-grid">
+            <div class="telemetry-card">
+                <div class="telemetry-icon">💻</div>
+                <div class="telemetry-label">CPU</div>
+                <div class="telemetry-value" id="cpu-val">0%</div>
+            </div>
+            <div class="telemetry-card">
+                <div class="telemetry-icon">💾</div>
+                <div class="telemetry-label">RAM</div>
+                <div class="telemetry-value" id="ram-val">0%</div>
+            </div>
+            <div class="telemetry-card">
+                <div class="telemetry-icon">📁</div>
+                <div class="telemetry-label">DISK</div>
+                <div class="telemetry-value" id="disk-val">0%</div>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 10px;">Quick Launches</div>
+        <div class="launch-list">
+            <button class="launch-btn" onclick="execCmd('open chrome')">🌐 Launch Chrome</button>
+            <button class="launch-btn" onclick="execCmd('search youtube for trending')">🎬 Search YouTube</button>
+            <button class="launch-btn" onclick="execCmd('open notepad')">📝 Open Notepad</button>
+            <button class="launch-btn" onclick="execCmd('screenshot')">📷 Capture Screenshot</button>
+            <button class="launch-btn" onclick="execCmd('organize downloads')">📂 Organize Downloads</button>
+        </div>
+    </div>
+
+    <!-- Center Panel: Voice Orb & Text Input -->
+    <div class="center-panel">
+        <div class="orb-wrapper">
+            <div class="orb" onclick="execCmd('hi')">
+                <div class="orb-icon">🎙️</div>
+            </div>
+            <div class="listening-status">
+                <div class="listening-dot"></div>
+                <span>Listening for "Hey GoYa"...</span>
+            </div>
+        </div>
+
+        <div class="input-bar-container">
+            <input type="text" id="cmd-input" class="cmd-input" placeholder="Say 'Hey GoYa...' or type command" onkeypress="handleKey(event)">
+            <button class="run-btn" onclick="submitInput()">Run</button>
+        </div>
+    </div>
+
+    <!-- Right Panel: Response Hub -->
+    <div class="right-panel">
+        <div class="section-title">Response Hub</div>
+        <div class="response-hub" id="response-hub">
+            <div class="response-card">
+                <div class="response-header">🤖 GoYa</div>
+                Online and active! Say "Hey GoYa" out loud or type a command below.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System Telemetry Polling
+    async function updateTelemetry() {
+        try {
+            const res = await fetch('/api/telemetry');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('cpu-val').innerText = data.cpu + '%';
+                document.getElementById('ram-val').innerText = data.ram + '%';
+                document.getElementById('disk-val').innerText = data.disk + '%';
+            }
+        } catch (e) {}
+    }
+    setInterval(updateTelemetry, 3000);
+    updateTelemetry();
+
+    // Browser Text-to-Speech Engine
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stop any overlapping speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Execute Command API
+    async function execCmd(commandText) {
+        if (!commandText) return;
+        
+        appendResponse('User', commandText, true);
+
+        try {
+            const res = await fetch('/api/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command: commandText })
+            });
+            const data = await res.json();
+            const replyMsg = data.message || 'Action executed.';
+            
+            appendResponse('GoYa', replyMsg);
+            speakText(replyMsg); // Speaks response out loud
+        } catch (err) {
+            const errorMsg = 'Error connecting to GoYa backend server.';
+            appendResponse('GoYa', errorMsg);
+            speakText(errorMsg);
+        }
+    }
+
+    function submitInput() {
+        const input = document.getElementById('cmd-input');
+        const val = input.value.trim();
+        if (val) {
+            execCmd(val);
+            input.value = '';
+        }
+    }
+
+    function handleKey(e) {
+        if (e.key === 'Enter') submitInput();
+    }
+
+    function appendResponse(sender, text, isUser = false) {
+        const hub = document.getElementById('response-hub');
+        const card = document.createElement('div');
+        card.className = 'response-card' + (isUser ? ' user' : '');
+        card.innerHTML = `<div class="response-header">${isUser ? '👤 You' : '🤖 GoYa'}</div>${text}`;
+        hub.appendChild(card);
+        hub.scrollTop = hub.scrollHeight;
+    }
+</script>
+</body>
+</html>
